@@ -5,6 +5,23 @@ public class ROBEntry {
 
   // TODO - add many more fields into entry
   // I deleted most, and only kept those necessary to compile GUI
+  
+  //K+A variables
+  //store fields
+  int addr; //addr of where we are storing
+  int virtRegSrc; //virtual register source (number of index in array)
+  int virtRegAddr; //virtual register holding adress to be written to (number of index in array)
+  int addrOffset; //offset to add to virtRegAddr to get final address to write to
+  
+  //branch fields
+  boolean prediction; //taken/nottaken prediction
+  boolean mispredict; //is the result of the prediction correct
+  int result;//conditional result for branches w/ conditions
+  int target;//address of branch target
+  int nextPC; //PC+4
+   
+  
+  //G's variables
   boolean complete = false;
   boolean predictTaken = false;
   boolean mispredicted = false;
