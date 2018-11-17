@@ -14,20 +14,25 @@ public class ROBEntry {
   int addrOffset; //offset to add to virtRegAddr to get final address to write to
   
   //branch fields
-  boolean prediction; //taken/nottaken prediction
-  boolean mispredict; //is the result of the prediction correct
+  //boolean prediction; //taken/nottaken prediction
+ // boolean mispredict; //is the result of the prediction correct
   int result;//conditional result for branches w/ conditions
   int target;//address of branch target
   int nextPC; //PC+4
    
+  //fields
+  
+  
+  
+  
   
   //G's variables
-  boolean complete = false;
+  boolean complete = false; //state field
   boolean predictTaken = false;
   boolean mispredicted = false;
-  int instPC = -1;
-  int writeReg = -1;
-  int writeValue = -1;
+  int instPC = -1; 
+  int writeReg = -1; //dest reg??? aka destination field
+  int writeValue = -1;//value to store in dest reg?? //value field
 
   IssuedInst.INST_TYPE opcode;
 
@@ -85,6 +90,15 @@ public class ROBEntry {
     // 1. update the instruction, as shown in 2nd line of code above
     // 2. update the fields of the ROBEntry, as shown in the 1st line of code above
 
+    
+    //fields: busy, instruction type, state (complete/executing), destination (reg# or mem addr for stores), value (result of operation or value for stores),tag (what to snoop for in ROB) 
+    //NOTE bufferslot is TAG field so no need to add/implement
+    
+    
+    
+    
+    
+    
   }
 
 }

@@ -36,7 +36,7 @@ public class ReorderBuffer {
     return numRetirees;
   }
 
-  public boolean retireInst() {
+  public boolean retireInst() {//---------------------------------------------------------------------
     // 3 cases
     // 1. regular reg dest inst
     // 2. isBranch w/ mispredict
@@ -67,7 +67,7 @@ public class ReorderBuffer {
     return false;
   }
 
-  public void readCDB(CDB cdb) {
+  public void readCDB(CDB cdb) {//---------------------------------------------------------------------
     // check entire CDB for someone waiting on this data
     // could be destination reg
     // could be store address source
@@ -75,7 +75,7 @@ public class ReorderBuffer {
     // TODO body of method
   }
 
-  public void updateInstForIssue(IssuedInst inst) {
+  public void updateInstForIssue(IssuedInst inst) {//---------------------------------------------------------------------
     // the task is to simply annotate the register fields
     // the dest reg will be assigned a tag, which is just our slot#
     // all src regs will either be assigned a tag, read from reg, or forwarded from ROB
