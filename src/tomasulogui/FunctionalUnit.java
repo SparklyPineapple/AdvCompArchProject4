@@ -27,5 +27,10 @@ public abstract class FunctionalUnit {
   public void acceptIssue(IssuedInst inst) {
   // todo - fill in reservation station (if available) with data from inst
   }
+  
+  public boolean areReservationStationsFull(){
+      if (!stations[0].isEmpty && !stations[1].isEmpty) return true;
+      return false;
+  }
 
 }

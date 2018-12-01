@@ -146,6 +146,16 @@ public class IssuedInst {
     public void setRegDestTag(int tag) {
       regDestTag = tag;
     }
+    
+    //K+A addition
+    public void setImmediate(int newImmed) {
+      immediate = newImmed;
+    }
+    
+    //K+A addition
+    public void setRegDest(int regDestNum) {
+      regDest = regDestNum;
+    }
 
     public static IssuedInst createIssuedInst(Instruction inst) {
       IssuedInst issued = new IssuedInst();
