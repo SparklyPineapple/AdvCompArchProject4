@@ -156,10 +156,10 @@ public class IssuedInst {
       immediate = newImmed;
     }
     
-    //K+A addition
-    public void setRegDest(int regDestNum) {
-      regDest = regDestNum;
-    }
+//    //K+A addition
+//    public void setRegDest(int regDestNum) {
+//      regDest = regDestNum;
+//    }
 
     public static IssuedInst createIssuedInst(Instruction inst) {
       IssuedInst issued = new IssuedInst();
