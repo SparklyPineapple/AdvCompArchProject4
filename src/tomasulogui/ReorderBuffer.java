@@ -68,7 +68,7 @@ public class ReorderBuffer {
   }
 
   public void readCDB(CDB cdb) {//---------------------------------------------------------------------
-    // check entire CDB for someone waiting on this data
+    // check entire CDB for someone waiting on this data -------(give them the info if available??)
     // could be destination reg
     // could be store address source
 

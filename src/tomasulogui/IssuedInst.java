@@ -10,7 +10,7 @@ public class IssuedInst {
     int pc = -1;
 
     int regDest = -1;
-    int regDestTag = -1;
+    int regDestTag = -1; //assume virtual reg
     boolean regDestUsed = false;
 
     // reg num
@@ -53,6 +53,10 @@ public class IssuedInst {
 
     public int getRegDest() {
       return regDest;
+    }
+    
+    public void setRegDest(int RegNum) {
+      regDest = RegNum;
     }
 
     public int getRegDestTag() {

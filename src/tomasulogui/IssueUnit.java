@@ -106,3 +106,24 @@ public class IssueUnit {
     }
 
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//not certian if we need this somewhere for stores or not
+/*
+
+
+    // store fields
+    int addr = -1; //addr of where we are storing
+    int virtRegSrc = -1; //virtual register source (number of index in array)
+    int virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
+    int addrOffset = -1; //offset to add to virtRegAddr to get final address to write to
+
+        if (opcode == IssuedInst.INST_TYPE.STORE) { 
+
+            //virtRegSrc = -1; //virtual register source (number of index in array)
+            //virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
+            addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
+            addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing
+        }
+*/
