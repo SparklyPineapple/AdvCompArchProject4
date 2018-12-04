@@ -29,7 +29,7 @@ public abstract class FunctionalUnit {
   }
   
   public boolean areReservationStationsFull(){
-      if (!stations[0].isEmpty && !stations[1].isEmpty) return true;
+      if (stations[0]!= null && stations[1] != null) return true;
       return false;
   }
 

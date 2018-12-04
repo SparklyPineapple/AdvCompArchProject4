@@ -25,57 +25,29 @@ public class IssueUnit {
         //opcode = simulator.getMemory().getInstAtAddr(instPC).getOpcode()
         Instruction memInstr = simulator.getMemory().getInstAtAddr(simulator.getPC());
 
-        issuee = new IssuedInst();
+        issuee = IssuedInst.createIssuedInst(memInstr);
+        issuee.pc = simulator.getPC();
         if (!simulator.reorder.isFull()) {
-            Instruction parsed = Instruction.getInstructionFromName(memInstr.getName());
 
-                //if immediate
-                if (parsed instanceof ITypeInst) {
-                    issuee.setImmediate(((ITypeInst) parsed).getImmed());
-                    issuee.setRegDest(((ITypeInst) parsed).rt);
-                    issuee.regSrc1 = (((ITypeInst) parsed).rs);
-
-                } //if reg reg
-                else if (parsed instanceof RTypeInst) {
-                    issuee.regDest = ((RTypeInst) parsed).rd;
-                    issuee.regSrc1 = ((RTypeInst) parsed).rs;
-                    issuee.regSrc2 = ((RTypeInst) parsed).rt;
-                    issuee.immediate = ((RTypeInst) parsed).shamt;
-
-                  
-                } //if J
-                else if (parsed instanceof JTypeInst) {
-                    issuee.immediate = ((JTypeInst) parsed).offset;
-                }
-
-                //this is where we should check the btb -----------------------------------------------------------------
-                
-                
-            
+            //this is where we should check the btb -----------------------------------------------------------------
             //intALU
             if (!simulator.alu.areReservationStationsFull() && memInstr.getOpcode() != Instruction.INST_DIV && memInstr.getOpcode() != Instruction.INST_MUL) {
-                
+
                 simulator.reorder.updateInstForIssue(issuee);
-                
-                
+
                 //check CDB for operands if current operands not valid
-                
                 //send to FU
                 simulator.alu.acceptIssue(issuee);
 
             } //intDIV
             else if (!simulator.divider.areReservationStationsFull() && memInstr.getOpcode() == Instruction.INST_DIV) {
-          
-                
-                
-                
+
                 simulator.reorder.updateInstForIssue(issuee);
                 //check CDB for operands if current operands not valid (for forwarding)
-                
+
                 //send to FU
                 simulator.divider.acceptIssue(issuee);
-                
-                
+
             } //intMULT
             else if (!simulator.multiplier.areReservationStationsFull() && memInstr.getOpcode() == Instruction.INST_MUL) {
                 // to issue, we make an IssuedInst, filling in what we know
@@ -86,27 +58,29 @@ public class IssueUnit {
                 //    so that we can forward during issue
 
                 // We then send this to the FU, who stores in reservation station
-                
                 simulator.reorder.updateInstForIssue(issuee);
                 //check CDB for operands if current operands not valid (for forwarding)
-                
+
                 //send to FU
                 simulator.multiplier.acceptIssue(issuee);
-                
-            }else{
+
+            } else {
                 //stall 
                 System.out.println("we got stallllllllllllllll; resStations FULLLLLLL");
-                
+
                 //change PC to stall
-                simulator.setPC(simulator.getPC()-4);
-                
+                simulator.setPC(simulator.getPC() - 4);
+
             }
         }
+
+        //updatePC
+        simulator.pc.incrPC();
+        //IF NECESSARY RESET PC FOR BRANCHING
 
     }
 
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //not certian if we need this somewhere for stores or not
