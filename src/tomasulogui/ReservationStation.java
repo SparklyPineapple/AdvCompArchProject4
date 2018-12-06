@@ -19,9 +19,8 @@ public class ReservationStation {
   int address;
   boolean predictedTaken = false;
 
-  //ADD TO REST OF FUNCTIONS/CLASSES THAT USE THIS
-  boolean isEmpty = true;
-  
+  //k+a
+  boolean isEmpty=true;
   
   public ReservationStation(PipelineSimulator sim) {
     simulator = sim;

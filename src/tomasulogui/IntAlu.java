@@ -11,6 +11,19 @@ public class IntAlu extends FunctionalUnit{
   public int calculateResult(int station) {
      // just placeholder code
     int result=0;
+    //IssuedInst.INST_TYPE 
+//    switch ()
+//    {
+//        
+//    }
+//    
+    
+    
+    
+    
+    
+    
+    
     return result;
   }
 

@@ -36,8 +36,13 @@ public class ReorderBuffer {
     return numRetirees;
   }
 
+  /**
+   * check to see if any ROBEnties are valid
+   *    -if so retire them approperately
+   * IF instruction is a HALT instruction return true
+   * @return 
+   */
   public boolean retireInst() {//---------------------------------------------------------------------
-    // 3 cases
     // 1. regular reg dest inst
     // 2. isBranch w/ mispredict
     // 3. isStore
@@ -52,16 +57,25 @@ public class ReorderBuffer {
       return true;
     }
 
-    boolean shouldAdvance = true;
+    boolean shouldAdvance = true; //what is this?
 
     // TODO - this is where you look at the type of instruction and
     // figure out how to retire it properly
 
+    
+    
+    //retire one closest to the front of the quese frontQ
+    
+    
+    
+    
       // if mispredict branch, won't do normal advance
-      if (shouldAdvance) {
-        numRetirees++;
+      if (shouldAdvance) { //if not branch mispredict
+        numRetirees++; //prolly tells us total instr executed
         buff[frontQ] = null;
         frontQ = (frontQ + 1) % size;
+      }else{ //if branch mispredict
+          
       }
 
     return false;
@@ -75,7 +89,7 @@ public class ReorderBuffer {
     // TODO body of method
   }
 
-  public void updateInstForIssue(IssuedInst inst) {//---------------------------------------------------------------------
+  public void updateInstForIssue(IssuedInst inst) {
     // the task is to simply annotate the register fields
     // the dest reg will be assigned a tag, which is just our slot#
     // all src regs will either be assigned a tag, read from reg, or forwarded from ROB
