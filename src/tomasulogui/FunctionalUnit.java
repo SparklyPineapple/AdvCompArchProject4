@@ -56,7 +56,7 @@ public abstract class FunctionalUnit {
                cdb.setDataValue(result);
                cdb.setDataTag(stations[0].destTag);
                cdb.setDataValid(true);
-               stations[0].isEmpty = false;//clear Res Station if applicable aka we can ust write over it :)
+               stations[0].isEmpty = false;//clear Res Station if applicable ... aka we can just write over it :)
             }
             
             
@@ -111,7 +111,7 @@ public abstract class FunctionalUnit {
     }
 
     public boolean areReservationStationsFull() {
-        if (stations[0] != null && stations[1] != null) {
+        if (!stations[0].isEmpty && !stations[1].isEmpty) {
             return true;
         }
         return false;
