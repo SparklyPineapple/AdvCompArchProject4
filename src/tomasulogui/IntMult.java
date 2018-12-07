@@ -8,8 +8,8 @@ public class IntMult extends FunctionalUnit {
         super(sim);
     }
 
-    public int calculateResult(int station) {
-        int result = 0;
+       public int calculateResult(int station) {
+        int result = stations[station].data1*stations[station].data2;
         return result;
 
     }
