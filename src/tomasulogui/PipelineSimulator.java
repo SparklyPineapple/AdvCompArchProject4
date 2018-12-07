@@ -274,7 +274,7 @@ public class PipelineSimulator {
     }
 
     public void step() {
-      isHalted = reorder.retireInst();
+      //isHalted = reorder.retireInst();
 
       if (!isHalted) {
         if (!quietMode) {

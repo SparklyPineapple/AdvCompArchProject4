@@ -8,10 +8,13 @@
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/FunctionalUnit.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/Instruction.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/IssuedInst.java</file>
+            <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/IntAlu.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/PipelineSimulator.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/ProgramCounter.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/RegisterFile.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/IssueUnit.java</file>
+            <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/ReservationStation.java</file>
+            <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/CDB.java</file>
             <file>file:/C:/Users/kedarst/Desktop/Proj4/AdvCompArchProject4/src/tomasulogui/ROBEntry.java</file>
         </group>
     </open-files>

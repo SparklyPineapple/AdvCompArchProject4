@@ -69,7 +69,7 @@ public abstract class FunctionalUnit {
 
     public void acceptIssue(IssuedInst inst) {
 
-//        //move stuff in first spot down if second spot is open so we can always know that the top stuff is most recent
+//        //move stuff in first spot down if second spot is open so we can always know that the top stuff is most recent.
 //        //aka FU check 2nd spot first and if nothing there grab from 1st spot
 //        if (stations[0] != null && stations[1] == null) {
 //            stations[1] = stations[0];
