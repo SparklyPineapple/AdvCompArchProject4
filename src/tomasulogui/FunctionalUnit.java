@@ -60,7 +60,7 @@ public abstract class FunctionalUnit {
         //be ready to start new count down when ALU is completed
         //write to cdb
         if (cycles2Execute <= 0) {
-            result = this.calculateResult(reservationStationBeingCalc);
+   //         result = this.calculateResult(reservationStationBeingCalc);
             iWantToTalk = true;
 //            if (iCanTalk) {
 //                cdb.setDataValue(result);

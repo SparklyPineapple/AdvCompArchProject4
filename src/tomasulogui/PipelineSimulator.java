@@ -374,18 +374,28 @@ public class PipelineSimulator {
       
       // hint: start with divider, and give it first chance of getting CDB
       if(divider.iWantToTalk){
-          divider.iCanTalk = true; 
-      }else if(multiplier.iWantToTalk){
-          multiplier.iCanTalk = true; 
-      }else if(alu.iWantToTalk){
-            cdb.setDataValue(alu.);
-            cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
+            cdb.setDataValue(divider.calculateResult(divider.reservationStationBeingCalc));
+            cdb.setDataTag(divider.stations[divider.reservationStationBeingCalc].destTag);
             cdb.setDataValid(true);
-            doCountDown = false;
-                stations[reservationStationBeingCalc] = new ReservationStation(simulator);
-                reservationStationBeingCalc = -1;
-                iCanTalk = false;
-                iWantToTalk = false;
+            divider.doCountDown = false;
+            divider.stations[divider.reservationStationBeingCalc] = new ReservationStation(divider.simulator);
+            divider.reservationStationBeingCalc = -1;
+      }else if(multiplier.iWantToTalk){
+            cdb.setDataValue(multiplier.calculateResult(multiplier.reservationStationBeingCalc));
+            cdb.setDataTag(multiplier.stations[multiplier.reservationStationBeingCalc].destTag);
+            cdb.setDataValid(true);
+            multiplier.doCountDown = false;
+            multiplier.stations[multiplier.reservationStationBeingCalc] = new ReservationStation(multiplier.simulator);
+            multiplier.reservationStationBeingCalc = -1;
+            multiplier.iWantToTalk = false;
+      }else if(alu.iWantToTalk){         
+            cdb.setDataValue(alu.calculateResult(alu.reservationStationBeingCalc));
+            cdb.setDataTag(alu.stations[alu.reservationStationBeingCalc].destTag);
+            cdb.setDataValid(true);
+            alu.doCountDown = false;
+            alu.stations[alu.reservationStationBeingCalc] = new ReservationStation(alu.simulator);
+            alu.reservationStationBeingCalc = -1;
+            alu.iWantToTalk = false;
       }else if(loader.requestWriteback){
           cdb.setDataTag(loader.writeTag);
           cdb.setDataValue(loader.writeData);
