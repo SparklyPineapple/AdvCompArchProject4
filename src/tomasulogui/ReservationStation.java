@@ -21,7 +21,7 @@ public class ReservationStation {
     boolean predictedTaken = false;
 
     //k+a
-    boolean isEmpty = true;
+    //boolean isEmpty = true;
 
     public ReservationStation(PipelineSimulator sim) {
         simulator = sim;
@@ -90,7 +90,7 @@ public class ReservationStation {
             data2Valid = newData2Valid;
             destTag = inst.regDestTag;
             function = inst.opcode;
-            isEmpty = false;
+            //isEmpty = false;
             
             
             //inititalze stuff for branches here

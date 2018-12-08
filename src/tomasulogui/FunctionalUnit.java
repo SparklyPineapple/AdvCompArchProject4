@@ -4,11 +4,16 @@ public abstract class FunctionalUnit {
 
     PipelineSimulator simulator;
     ReservationStation[] stations = new ReservationStation[2];
+    int cycles2Execute = -1;
+    boolean doCountDown = false;
+    int reservationStationBeingCalc = -1;
+    boolean iWantToTalk = false;
+    boolean iCanTalk = false;
 
     public FunctionalUnit(PipelineSimulator sim) {
         simulator = sim;
-        stations[0] = new ReservationStation(simulator);
-        stations[1] = new ReservationStation(simulator);
+        //stations[0] = new ReservationStation(simulator);
+        //stations[1] = new ReservationStation(simulator);
     }
 
     public void squashAll() {
@@ -19,6 +24,12 @@ public abstract class FunctionalUnit {
     public abstract int calculateResult(int station);
 
     public abstract int getExecCycles();
+
+    public void countDownCycles() {
+        if (cycles2Execute > 0) {
+            cycles2Execute--;
+        }
+    }
 
     public void execCycle(CDB cdb) {
 
@@ -51,18 +62,42 @@ public abstract class FunctionalUnit {
 
         //send to the alu if an instruction is ready
         int result;
-        if (stations[1].isReady()) {
-            result = this.calculateResult(1);
-            cdb.setDataValue(result);
-            cdb.setDataTag(stations[1].destTag);
-            cdb.setDataValid(true);
-            stations[1].isEmpty = true;
-        } else if (stations[0].isReady()) {
-            result = this.calculateResult(0);
-            cdb.setDataValue(result);
-            cdb.setDataTag(stations[0].destTag);
-            cdb.setDataValid(true);
-            stations[0].isEmpty = false;//clear Res Station if applicable ... aka we can just write over it :)
+        if (doCountDown == false && reservationStationBeingCalc == -1) {
+            if (stations[1] != null) {
+                if (stations[1].isReady()) {
+                    reservationStationBeingCalc = 1;
+                    doCountDown = true;
+                    cycles2Execute = getExecCycles();
+                }
+            }
+            if (stations[1] == null && stations[0] != null) {
+                if (stations[0].isReady()) {
+
+                    reservationStationBeingCalc = 0;
+                    doCountDown = true;
+                    cycles2Execute = getExecCycles();
+                }
+            }
+
+        } else {
+            countDownCycles();
+            //be ready to start new count down when ALU is completed
+            //write to cdb
+            if (cycles2Execute <= 0) {
+                result = this.calculateResult(reservationStationBeingCalc);
+                iWantToTalk = true;
+                if (iCanTalk) {
+                    cdb.setDataValue(result);
+                    cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
+                    cdb.setDataValid(true);
+                    doCountDown = false;
+                    stations[reservationStationBeingCalc] = new ReservationStation(simulator);
+                    reservationStationBeingCalc = -1;
+                    iCanTalk = false;
+                    iWantToTalk = false;
+
+                }
+            }
         }
 
     }
@@ -72,26 +107,19 @@ public abstract class FunctionalUnit {
         //accepts issues into reservation stations 
         //reservation stations are already verified to be open before it hits this point (in IssueUnit) 
         //fill in index 1 (lower index close it ALU if empty)
-        if (stations[1] != null && stations[0] != null) {
-            if (stations[1].isEmpty) {
-                stations[1].loadInst(inst);
-            } else //write to index 0
-            {
-                stations[0].loadInst(inst);
-            }
-        } else if (stations[1] != null) {
-            stations[0].loadInst(inst);
+        ReservationStation tempStation = new ReservationStation(simulator);
+        tempStation.loadInst(inst);
+        if (stations[1] != null) {
+            stations[1] = tempStation;
         } else {
-            stations[1].loadInst(inst);
+            stations[0] = tempStation;
         }
 
     }
 
+    //for every call to execCycle() an iterator should go down by 1 but when do we start the count down and how do we communicate when we are finished?
     public boolean areReservationStationsFull() {
         if (stations[0] != null && stations[1] != null) {
-            if (!stations[0].isEmpty && !stations[1].isEmpty) {
-                return true;
-            }
         }
         return false;
     }

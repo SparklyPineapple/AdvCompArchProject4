@@ -6,7 +6,7 @@ ADDI R2, R2, 2
 NOP
 NOP
 NOP
-ADD R3, R1, R2
+MUL R3, R1, R2
 End Assembly
 -- begin main data
 Begin Data 4000 44

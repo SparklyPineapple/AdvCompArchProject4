@@ -281,7 +281,7 @@ public class PipelineSimulator {
           System.out.println("fetching instruction from address " + pc.getPC());
         }
 
-        //updateCDB();////////DO THIS
+        updateCDB();////////DO THIS
 
         //divider.execCycle(cdb); //error here
         //multiplier.execCycle(cdb);
@@ -366,14 +366,28 @@ public class PipelineSimulator {
       cdb.squashAll();
     }
 
-    public void updateCDB() {//--------------------------------------------------------------------------------------------------------------------------
+    public void updateCDB() {
       // here, we need to poll the functional units and see if they want to
       // writeback.  We pick longest running of those who want to use CDB and
       // notify them they can write
       cdb.setDataValid(false);
-
+      
       // hint: start with divider, and give it first chance of getting CDB
-
+      if(divider.iWantToTalk){
+          divider.iCanTalk = true; 
+      }else if(multiplier.iWantToTalk){
+          multiplier.iCanTalk = true; 
+      }else if(alu.iWantToTalk){
+          alu.iCanTalk = true; 
+      }else if(loader.requestWriteback){
+          cdb.setDataTag(loader.writeTag);
+          cdb.setDataValue(loader.writeData);
+          cdb.setDataValid(true);
+      }else{
+          //branches---------------------------------------------------------------------------------------------------------------------
+      }
+      
+      
     }
 
     public static void main(String[] args) {
