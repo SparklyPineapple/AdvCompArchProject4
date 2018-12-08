@@ -22,8 +22,9 @@ public abstract class FunctionalUnit {
     public void execCycle(CDB cdb) {
         //todo - start executing, ask for CDB, etc.
 
+        //snoop on the CDB first to validate/update data before checking if
+        //a functional unit can perform its function
         if (cdb.getDataValid()) {
-            
             if(cdb.getDataTag()== stations[0].tag1){
                 stations[0].data1 = cdb.dataValue;
                 stations[0].data1Valid = true;
@@ -69,6 +70,44 @@ public abstract class FunctionalUnit {
 
     public void acceptIssue(IssuedInst inst) {
 
+        int newData2;
+        int newData2Tag;
+        boolean newData2Valid;
+        
+       //Depending on instruction type, data2 will be assign differently
+//        switch (inst.letter) {
+//            case I:
+//                if(inst.regDestUsed){
+//                    newData2 = inst.immediate;
+//                    newData2Tag = -1;
+//                    newData2valid = true;
+//                }
+//                break;
+//            case J:
+//                System.out.println("j-type detected in functional unit");
+//                break;
+//            case R:
+//                newData2 = inst.regSrc2;
+//                newData2Tag = inst.regSrc2Tag;
+//                newData2valid = inst.regSrc2Valid;
+//                break;
+//            default:
+//                break;
+//        }
+        
+        
+        if(inst.regSrc2Used){
+            newData2 = inst.regSrc2;
+            newData2Tag= inst.regSrc2Tag;
+            newData2Valid= inst.regSrc2Valid;
+        }else{
+            newData2 = inst.immediate;
+            newData2Tag = -1;
+            newData2Valid = true;   
+        }
+        
+        
+        
 //        //move stuff in first spot down if second spot is open so we can always know that the top stuff is most recent.
 //        //aka FU check 2nd spot first and if nothing there grab from 1st spot
 //        if (stations[0] != null && stations[1] == null) {
@@ -79,12 +118,13 @@ public abstract class FunctionalUnit {
             stations[1].tag1 = inst.regSrc1Tag;
             stations[1].data1 = inst.regSrc1Value;
             stations[1].data1Valid = inst.regSrc1Valid;
-            stations[1].tag2 = inst.regSrc1Tag;
-            stations[1].data2 = inst.regSrc1Value;
-            stations[1].data2Valid = inst.regSrc1Valid;
+            stations[1].tag2 = newData2Tag;
+            stations[1].data2 = newData2;
+            stations[1].data2Valid = newData2Valid;
             stations[1].destTag = inst.regDestTag;
             stations[1].function = inst.opcode;
             stations[1].isEmpty = false;
+            
             //FOR BRANCHES
 //            stations[1].addressTag = inst.branchTgt?????
 //            if (stations[1].addressTag != -1){
@@ -100,9 +140,9 @@ public abstract class FunctionalUnit {
             stations[0].tag1 = inst.regSrc1Tag;
             stations[0].data1 = inst.regSrc1Value;
             stations[0].data1Valid = inst.regSrc1Valid;
-            stations[0].tag2 = inst.regSrc1Tag;
-            stations[0].data2 = inst.regSrc1Value;
-            stations[0].data2Valid = inst.regSrc1Valid;
+            stations[1].tag2 = newData2Tag;
+            stations[1].data2 = newData2;
+            stations[1].data2Valid = newData2Valid;
             stations[0].destTag = inst.regDestTag;
             stations[0].function = inst.opcode;
             stations[0].isEmpty = false;

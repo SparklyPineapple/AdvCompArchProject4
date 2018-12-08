@@ -6,9 +6,13 @@ public class IssuedInst {
         LOAD, STORE, HALT,
         NOP, BEQ, BNE, BLTZ, BLEZ, BGEZ, BGTZ, J, JAL, JR, JALR} ;
 
+  public enum INST_LETTER_TYPE{
+      I,R,J
+  }
     INST_TYPE opcode;
+    INST_LETTER_TYPE letter;
     int pc = -1;
-
+    
     int regDest = -1;
     int regDestTag = -1; //assume virtual reg
     boolean regDestUsed = false;
@@ -283,10 +287,12 @@ public class IssuedInst {
         immediate = (inst.getImmed() << 16) >> 16;
       }
 
+      letter = INST_LETTER_TYPE.I;
     }
 
     private void decodeJType(JTypeInst inst) {
       immediate = (inst.getOffset() << 6) >> 6;
+      letter = INST_LETTER_TYPE.J;
     }
 
     private void decodeRType(RTypeInst inst) {
@@ -294,7 +300,7 @@ public class IssuedInst {
       regDest = inst.getRD();
       regSrc1Used = true;
       regSrc1 = inst.getRS();
-	  
+      letter = INST_LETTER_TYPE.R;
 	  if(inst.opcode != Instruction.INST_SLL && inst.opcode != Instruction.INST_SRA && inst.opcode != Instruction.INST_SRL)
       {
           regSrc2Used = true;
