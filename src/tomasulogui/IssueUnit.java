@@ -23,15 +23,31 @@ public class IssueUnit {
 
         //IssuedInst instr = new IssuedInst();
         //opcode = simulator.getMemory().getInstAtAddr(instPC).getOpcode()
+        boolean isStall = false;
         Instruction memInstr = simulator.getMemory().getInstAtAddr(simulator.getPC());
 
         issuee = IssuedInst.createIssuedInst(memInstr);
         issuee.pc = simulator.getPC();
-        if (!simulator.reorder.isFull()) {
 
+        //all instructions that need ALUs. if ROB or reservation stations are full stall
+        if (!simulator.reorder.isFull()) {
+            
             //this is where we should check the btb -----------------------------------------------------------------
+            //loads
+            if (memInstr.getOpcode() == Instruction.INST_LW) {
+                try {
+                    simulator.loader.acceptIssue(issuee);
+                } catch (MIPSException mipsExceptionCaught) {
+                    isStall = true; //set true since loadbuffer has no room
+                }
+                if (!isStall) simulator.reorder.updateInstForIssue(issuee);
+            }
+            //stores
+            else if(memInstr.getOpcode() == Instruction.INST_SW){
+                simulator.reorder.updateInstForIssue(issuee);
+            }
             //intALU
-            if (!simulator.alu.areReservationStationsFull() && memInstr.getOpcode() != Instruction.INST_DIV && memInstr.getOpcode() != Instruction.INST_MUL) {
+            else if (!simulator.alu.areReservationStationsFull() && memInstr.getOpcode() != Instruction.INST_DIV && memInstr.getOpcode() != Instruction.INST_MUL) {
 
                 simulator.reorder.updateInstForIssue(issuee);
 
@@ -65,6 +81,10 @@ public class IssueUnit {
                 simulator.multiplier.acceptIssue(issuee);
 
             } else {
+                isStall = true; //set true if non of ALU reservation stations are ready
+            }
+
+            if (isStall) {
                 //stall 
                 System.out.println("we got stallllllllllllllll; resStations FULLLLLLL");
 
@@ -100,4 +120,4 @@ public class IssueUnit {
             addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
             addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing
         }
-*/
+ */
