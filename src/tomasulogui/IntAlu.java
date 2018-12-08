@@ -9,68 +9,44 @@ public class IntAlu extends FunctionalUnit {
     }
 
     public int calculateResult(int station) {
-        // just placeholder code
-        int result = 0;
-        //IssuedInst.INST_TYPE 
         switch (stations[station].function) {
             case ADD:
-                int a = 1;
-                break;
+                return stations[station].data1 + stations[station].data2;
             case ADDI:
-                int a = 1;
-                break;
+                return stations[station].data1 + stations[station].data2;
             case SUB:
-                int a = 1;
-                break;
+                return stations[station].data1 - stations[station].data2;
             case AND:
-                int a = 1;
-                break;
+                return stations[station].data1 & stations[station].data2;
             case ANDI:
-                int a = 1;
-                break;
+                return stations[station].data1 & stations[station].data2;
             case OR:
-                int a = 1;
-                break;
+                return stations[station].data1 | stations[station].data2;
             case ORI:
-                int a = 1;
-                break;
+                return stations[station].data1 | stations[station].data2;
             case XOR:
-                int a = 1;
-                break;
+                return stations[station].data1 ^ stations[station].data2;
             case XORI:
-                int a = 1;
-                break;
+                return stations[station].data1 ^ stations[station].data2;
             case SLL:
-                int a = 1;
-                break;
+                return stations[station].data1 << stations[station].data2;
             case SRL:
-                int a = 1;
-                break;
+                return stations[station].data1 >> stations[station].data2;
             case SRA:
-                int a = 1;
-                break;
-            case ADD:
-                int a = 1;
-                break;
-                            case ADD:
-                int a = 1;
-                break;
-                            case ADD:
-                int a = 1;
-                break;
-                            case ADD:
-                int a = 1;
-                break;
-                            case ADD:
-                int a = 1;
-                break;
-        }
-//    {
-//        
-//    }
-//    
+                return stations[station].data1 >>> stations[station].data2;
+            //STICK JUMPS & BRANCH STUFF HERE (if we do that stuff here)
+//            case ADD:
+//                int a = 1;
+//                break;
+//            case ADD:
+//                int a = 1;
+//                break;
+//            case ADD:
+//                int a = 1;
+//                break;
 
-        return result;
+        }
+        return -1;
     }
 
     public int getExecCycles() {
