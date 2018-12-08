@@ -378,7 +378,14 @@ public class PipelineSimulator {
       }else if(multiplier.iWantToTalk){
           multiplier.iCanTalk = true; 
       }else if(alu.iWantToTalk){
-          alu.iCanTalk = true; 
+            cdb.setDataValue(alu.);
+            cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
+            cdb.setDataValid(true);
+            doCountDown = false;
+                stations[reservationStationBeingCalc] = new ReservationStation(simulator);
+                reservationStationBeingCalc = -1;
+                iCanTalk = false;
+                iWantToTalk = false;
       }else if(loader.requestWriteback){
           cdb.setDataTag(loader.writeTag);
           cdb.setDataValue(loader.writeData);

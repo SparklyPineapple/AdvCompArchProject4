@@ -26,90 +26,66 @@ public abstract class FunctionalUnit {
     public abstract int getExecCycles();
 
     public void countDownCycles() {
-        if (cycles2Execute > 0) {
             cycles2Execute--;
-        }
+        
     }
 
     public void execCycle(CDB cdb) {
 
 //        //snoop on the CDB first to validate/update data before checking if<---THIS IS DONE IN RESERVATION STATION CLASS
 //        //a functional unit can perform its function
-//        if (cdb.getDataValid()) {
-//            if(cdb.getDataTag()== stations[0].tag1){
-//                stations[0].data1 = cdb.dataValue;
-//                stations[0].data1Valid = true;
-//                
-//            }else if(cdb.getDataTag()== stations[0].tag2){
-//                stations[0].data2 = cdb.dataValue;
-//                stations[0].data2Valid = true;
-//                
-//            }else if(cdb.getDataTag()== stations[1].tag1){
-//                stations[1].data1 = cdb.dataValue;
-//                stations[1].data1Valid = true;
-//            }else if(cdb.getDataTag()== stations[1].tag2){
-//                stations[1].data2 = cdb.dataValue;
-//                stations[1].data2Valid = true;
-//            }else{
-//                //crickets
-//            }
+
         if (cdb.getDataValid() && stations[0] != null) {
             stations[0].snoop(cdb);
         }
         if (cdb.getDataValid() && stations[1] != null) {
-            stations[0].snoop(cdb);
+            stations[1].snoop(cdb);
         }
 
         //send to the alu if an instruction is ready
         int result;
         if (doCountDown == false && reservationStationBeingCalc == -1) {
-            if (stations[1] != null) {
-                if (stations[1].isReady()) {
-                    reservationStationBeingCalc = 1;
-                    doCountDown = true;
-                    cycles2Execute = getExecCycles();
-                }
-            }
-            if (stations[1] == null && stations[0] != null) {
-                if (stations[0].isReady()) {
-
-                    reservationStationBeingCalc = 0;
-                    doCountDown = true;
-                    cycles2Execute = getExecCycles();
-                }
-            }
-
-        } else {
-            countDownCycles();
-            //be ready to start new count down when ALU is completed
-            //write to cdb
-            if (cycles2Execute <= 0) {
-                result = this.calculateResult(reservationStationBeingCalc);
-                iWantToTalk = true;
-                if (iCanTalk) {
-                    cdb.setDataValue(result);
-                    cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
-                    cdb.setDataValid(true);
-                    doCountDown = false;
-                    stations[reservationStationBeingCalc] = new ReservationStation(simulator);
-                    reservationStationBeingCalc = -1;
-                    iCanTalk = false;
-                    iWantToTalk = false;
-
-                }
+            if (stations[1] != null && stations[1].isReady()) {
+                reservationStationBeingCalc = 1;
+                doCountDown = true;
+                cycles2Execute = getExecCycles();
+            } else if (stations[0] != null && stations[0].isReady()) {
+                reservationStationBeingCalc = 0;
+                doCountDown = true;
+                cycles2Execute = getExecCycles();
             }
         }
-
+        else {
+            cycles2Execute--;
+        //be ready to start new count down when ALU is completed
+        //write to cdb
+        if (cycles2Execute <= 0) {
+            result = this.calculateResult(reservationStationBeingCalc);
+            iWantToTalk = true;
+//            if (iCanTalk) {
+//                cdb.setDataValue(result);
+//                cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
+//                cdb.setDataValid(true);
+//                doCountDown = false;
+//                stations[reservationStationBeingCalc] = new ReservationStation(simulator);
+//                reservationStationBeingCalc = -1;
+//                iCanTalk = false;
+//                iWantToTalk = false;
+//
+//            }
+        }
     }
 
-    public void acceptIssue(IssuedInst inst) {
+}
+
+public void acceptIssue(IssuedInst inst) {
 
         //accepts issues into reservation stations 
         //reservation stations are already verified to be open before it hits this point (in IssueUnit) 
         //fill in index 1 (lower index close it ALU if empty)
         ReservationStation tempStation = new ReservationStation(simulator);
         tempStation.loadInst(inst);
-        if (stations[1] != null) {
+        if (stations[1] == null) {
             stations[1] = tempStation;
         } else {
             stations[0] = tempStation;
