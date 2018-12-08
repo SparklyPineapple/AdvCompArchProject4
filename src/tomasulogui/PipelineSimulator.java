@@ -281,13 +281,13 @@ public class PipelineSimulator {
           System.out.println("fetching instruction from address " + pc.getPC());
         }
 
-        updateCDB();
+        //updateCDB();////////DO THIS
 
-        divider.execCycle(cdb);
-        multiplier.execCycle(cdb);
+        //divider.execCycle(cdb); //error here
+        //multiplier.execCycle(cdb);
         alu.execCycle(cdb);
-        branchUnit.execCycle(cdb);
-        loader.execCycle(cdb);
+        //branchUnit.execCycle(cdb);
+       // loader.execCycle(cdb);
 
         // this updates PC, so no call from here for that
         issue.execCycle();
@@ -359,14 +359,14 @@ public class PipelineSimulator {
       regs.squashAll();
 
       loader.squashAll();
-//      alu.squashAll();
-//      multiplier.squashAll();
-//      divider.squashAll();
+      alu.squashAll();
+      multiplier.squashAll();
+      divider.squashAll();
 //      branchUnit.squashAll();
       cdb.squashAll();
     }
 
-    public void updateCDB() {
+    public void updateCDB() {//--------------------------------------------------------------------------------------------------------------------------
       // here, we need to poll the functional units and see if they want to
       // writeback.  We pick longest running of those who want to use CDB and
       // notify them they can write

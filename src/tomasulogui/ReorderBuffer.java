@@ -37,9 +37,7 @@ public class ReorderBuffer {
   }
 
   /**
-   * check to see if any ROBEnties are valid
-   *    -if so retire them approperately
-   * IF instruction is a HALT instruction return true
+   * if instruction is a HALT instruction return true
    * @return 
    */
   public boolean retireInst() {//---------------------------------------------------------------------

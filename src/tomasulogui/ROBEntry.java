@@ -133,14 +133,6 @@ public class ROBEntry {
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        
         //IF STORE
         if (opcode == IssuedInst.INST_TYPE.STORE) { 
             //virtRegSrc = -1; //virtual register source (number of index in array)
@@ -148,9 +140,7 @@ public class ROBEntry {
             addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
             addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing
         }
-        
-        
-        
+          
         
         //IF BRANCH (in case of mispredicted branch
         //target (taken addr)

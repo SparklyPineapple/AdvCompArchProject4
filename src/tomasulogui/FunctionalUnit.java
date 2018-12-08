@@ -7,7 +7,8 @@ public abstract class FunctionalUnit {
 
     public FunctionalUnit(PipelineSimulator sim) {
         simulator = sim;
-
+        stations[0] = new ReservationStation(simulator);
+        stations[1] = new ReservationStation(simulator);
     }
 
     public void squashAll() {
@@ -41,8 +42,12 @@ public abstract class FunctionalUnit {
 //            }else{
 //                //crickets
 //            }
-        stations[0].snoop(cdb);
-        stations[1].snoop(cdb);
+        if (cdb.getDataValid() && stations[0] != null) {
+            stations[0].snoop(cdb);
+        }
+        if (cdb.getDataValid() && stations[1] != null) {
+            stations[0].snoop(cdb);
+        }
 
         //send to the alu if an instruction is ready
         int result;
@@ -67,18 +72,26 @@ public abstract class FunctionalUnit {
         //accepts issues into reservation stations 
         //reservation stations are already verified to be open before it hits this point (in IssueUnit) 
         //fill in index 1 (lower index close it ALU if empty)
-        if (stations[1].isEmpty) {
-            stations[1].loadInst(inst);
-        } else //write to index 0
-        {
+        if (stations[1] != null && stations[0] != null) {
+            if (stations[1].isEmpty) {
+                stations[1].loadInst(inst);
+            } else //write to index 0
+            {
+                stations[0].loadInst(inst);
+            }
+        } else if (stations[1] != null) {
             stations[0].loadInst(inst);
+        } else {
+            stations[1].loadInst(inst);
         }
 
     }
 
     public boolean areReservationStationsFull() {
-        if (!stations[0].isEmpty && !stations[1].isEmpty) {
-            return true;
+        if (stations[0] != null && stations[1] != null) {
+            if (!stations[0].isEmpty && !stations[1].isEmpty) {
+                return true;
+            }
         }
         return false;
     }

@@ -21,8 +21,14 @@ public class IssueUnit {
         // 1. checking if ROB and Reservation Station avail
         // 2. issuing to reservation station, if no structural hazard
 
-        //IssuedInst instr = new IssuedInst();
-        //opcode = simulator.getMemory().getInstAtAddr(instPC).getOpcode()
+        // to issue, we make an IssuedInst, filling in what we know
+        // We check the BTB, and put prediction if branch, updating PC
+        //     if pred taken, incr PC otherwise
+        // We then send this to the ROB, which fills in the data fields
+        // We then check the CDB, and see if it is broadcasting data we need,
+        //    so that we can forward during issue
+        
+        
         boolean isStall = false;
         Instruction memInstr = simulator.getMemory().getInstAtAddr(simulator.getPC());
 
@@ -31,7 +37,7 @@ public class IssueUnit {
 
         //all instructions that need ALUs. if ROB or reservation stations are full stall
         if (!simulator.reorder.isFull()) {
-            
+
             //this is where we should check the btb -----------------------------------------------------------------
             //loads
             if (memInstr.getOpcode() == Instruction.INST_LW) {
@@ -40,13 +46,17 @@ public class IssueUnit {
                 } catch (MIPSException mipsExceptionCaught) {
                     isStall = true; //set true since loadbuffer has no room
                 }
-                if (!isStall) simulator.reorder.updateInstForIssue(issuee);
-            }
-            //stores
-            else if(memInstr.getOpcode() == Instruction.INST_SW){
+                if (!isStall) {
+                    simulator.reorder.updateInstForIssue(issuee);
+                }
+            } //stores
+            else if (memInstr.getOpcode() == Instruction.INST_SW) {
                 simulator.reorder.updateInstForIssue(issuee);
-            }
-            //intALU
+            } //NOPS
+            else if (memInstr.getOpcode() == Instruction.INST_NOP) {
+                //store in ROB. stored as "valid" ??. when ROB is ready to retire it just gets discarded and life moves on?????? 
+                simulator.reorder.updateInstForIssue(issuee);
+            } //intALU
             else if (!simulator.alu.areReservationStationsFull() && memInstr.getOpcode() != Instruction.INST_DIV && memInstr.getOpcode() != Instruction.INST_MUL) {
 
                 simulator.reorder.updateInstForIssue(issuee);
@@ -66,12 +76,6 @@ public class IssueUnit {
 
             } //intMULT
             else if (!simulator.multiplier.areReservationStationsFull() && memInstr.getOpcode() == Instruction.INST_MUL) {
-                // to issue, we make an IssuedInst, filling in what we know
-                // We check the BTB, and put prediction if branch, updating PC
-                //     if pred taken, incr PC otherwise
-                // We then send this to the ROB, which fills in the data fields
-                // We then check the CDB, and see if it is broadcasting data we need,
-                //    so that we can forward during issue
 
                 // We then send this to the FU, who stores in reservation station
                 simulator.reorder.updateInstForIssue(issuee);
@@ -94,9 +98,9 @@ public class IssueUnit {
             }
         }
 
-        //updatePC
+        //updatePC -----PC gets updated in ROBEntry
         simulator.pc.incrPC();
-        //IF NECESSARY RESET PC FOR BRANCHING
+        //IF NECESSARY RESET PC FOR BRANCHING HERE
 
     }
 
