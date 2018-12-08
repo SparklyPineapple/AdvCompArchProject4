@@ -45,7 +45,7 @@ public class ReorderBuffer {
   public boolean retireInst() {//---------------------------------------------------------------------
     // 1. regular reg dest inst
     // 2. isBranch w/ mispredict
-    // 3. isStore
+    // 3. isStore (store if instruction needs to store)
     ROBEntry retiree = buff[frontQ];
 
     if (retiree == null) {
