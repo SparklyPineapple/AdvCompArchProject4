@@ -12,8 +12,6 @@ public abstract class FunctionalUnit {
 
     public FunctionalUnit(PipelineSimulator sim) {
         simulator = sim;
-        //stations[0] = new ReservationStation(simulator);
-        //stations[1] = new ReservationStation(simulator);
     }
 
     public void squashAll() {
@@ -26,15 +24,14 @@ public abstract class FunctionalUnit {
     public abstract int getExecCycles();
 
     public void countDownCycles() {
-            cycles2Execute--;
-        
+        cycles2Execute--;
+
     }
 
     public void execCycle(CDB cdb) {
 
-//        //snoop on the CDB first to validate/update data before checking if<---THIS IS DONE IN RESERVATION STATION CLASS
+//        //snoop on the CDB first to validate/update data before checking if
 //        //a functional unit can perform its function
-
         if (cdb.getDataValid() && stations[0] != null) {
             stations[0].snoop(cdb);
         }
@@ -42,26 +39,15 @@ public abstract class FunctionalUnit {
             stations[1].snoop(cdb);
         }
 
-        //send to the alu if an instruction is ready
-        int result;
-        if (doCountDown == false && reservationStationBeingCalc == -1) {
-            if (stations[1] != null && stations[1].isReady()) {
-                reservationStationBeingCalc = 1;
-                doCountDown = true;
-                cycles2Execute = getExecCycles();
-            } else if (stations[0] != null && stations[0].isReady()) {
-                reservationStationBeingCalc = 0;
-                doCountDown = true;
-                cycles2Execute = getExecCycles();
-            }
-        }
-        else {
+
+        //if reservation station is executing, then count down cycles. else see if instr cycles is ready
+        if (doCountDown) {
             cycles2Execute--;
-        //be ready to start new count down when ALU is completed
-        //write to cdb
-        if (cycles2Execute <= 0) {
-   //         result = this.calculateResult(reservationStationBeingCalc);
-            iWantToTalk = true;
+            //be ready to start new count down when ALU is completed
+            //write to cdb
+            if (cycles2Execute <= 0) {
+                //         result = this.calculateResult(reservationStationBeingCalc);
+                iWantToTalk = true;
 //            if (iCanTalk) {
 //                cdb.setDataValue(result);
 //                cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
@@ -73,12 +59,22 @@ public abstract class FunctionalUnit {
 //                iWantToTalk = false;
 //
 //            }
+            }
+        } else if (doCountDown == false && reservationStationBeingCalc == -1) {
+            if (stations[1] != null && stations[1].isReady()) {
+                reservationStationBeingCalc = 1;
+                doCountDown = true;
+                cycles2Execute = getExecCycles()-1; //1 for being loaded, and one for this clk cycle
+            } else if (stations[0] != null && stations[0].isReady()) {
+                reservationStationBeingCalc = 0;
+                doCountDown = true;
+                cycles2Execute = getExecCycles()-1;
+            }
         }
+
     }
 
-}
-
-public void acceptIssue(IssuedInst inst) {
+    public void acceptIssue(IssuedInst inst) {
 
         //accepts issues into reservation stations 
         //reservation stations are already verified to be open before it hits this point (in IssueUnit) 
