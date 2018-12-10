@@ -267,7 +267,7 @@ public class PipelineSimulator {
     }
 
     public void step() {
-        //isHalted = reorder.retireInst();
+        isHalted = reorder.retireInst();
 
         if (!isHalted) {
             if (!quietMode) {
@@ -276,16 +276,20 @@ public class PipelineSimulator {
 
             updateCDB();
 
-            //divider.execCycle(cdb); //error here
-            //multiplier.execCycle(cdb);
+            divider.execCycle(cdb); //error here
+            multiplier.execCycle(cdb);
             alu.execCycle(cdb);
             //branchUnit.execCycle(cdb);
-            // loader.execCycle(cdb);
+            loader.execCycle(cdb);
 
             // this updates PC, so no call from here for that
             issue.execCycle();
-
+            
+            reorder.readCDB(cdb);
+            
             instExec++;
+        }else{
+            quietMode = true;//?
         }
 
         if (!quietMode) {
@@ -390,9 +394,9 @@ public class PipelineSimulator {
 //            alu.iWantToTalk = false;
             alu.iCanTalk = true;
         } else if (loader.requestWriteback) {
-//          cdb.setDataTag(loader.writeTag);
-//          cdb.setDataValue(loader.writeData);
-//          cdb.setDataValid(true);
+          cdb.setDataTag(loader.writeTag);
+          cdb.setDataValue(loader.writeData);
+          cdb.setDataValid(true);
             //else if branch----------------------------------------------------------------------------------------
         } else {
             cdb.setDataValid(false);

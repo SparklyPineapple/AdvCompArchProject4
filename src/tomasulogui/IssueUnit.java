@@ -41,16 +41,20 @@ public class IssueUnit {
             //this is where we should check the btb -----------------------------------------------------------------
             //loads
             if (memInstr.getOpcode() == Instruction.INST_LW) {
-                try {
-                    simulator.loader.acceptIssue(issuee);
-                } catch (MIPSException mipsExceptionCaught) {
-                    isStall = true; //set true since loadbuffer has no room
-                }
-                if (!isStall) {
+                
+                if(simulator.loader.isReservationStationAvail()){
                     simulator.reorder.updateInstForIssue(issuee);
+                    simulator.loader.acceptIssue(issuee);
+                }else{
+                    isStall = true;
                 }
+                               
+                
             } //stores
             else if (memInstr.getOpcode() == Instruction.INST_SW) {
+                simulator.reorder.updateInstForIssue(issuee);
+            }//HALTS
+            else if (memInstr.getOpcode() == Instruction.INST_HALT) {
                 simulator.reorder.updateInstForIssue(issuee);
             } //NOPS
             else if (memInstr.getOpcode() == Instruction.INST_NOP) {

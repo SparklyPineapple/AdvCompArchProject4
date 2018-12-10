@@ -7,6 +7,7 @@ NOP
 NOP
 NOP
 ADD R3, R1, R2
+HALT
 End Assembly
 -- begin main data
 Begin Data 4000 44

@@ -64,19 +64,20 @@ public class ReorderBuffer {
         //retire one closest to the front of the quese frontQ
         // if mispredict branch, won't do normal advance
         if (retiree.complete) {
-            
-            //stores
-            if (retiree.getOpcode() == IssuedInst.INST_TYPE.STORE){
-                simulator.memory.setIntDataAtAddr(retiree.addr, retiree.getWriteValue());
-                
-            }else{//reg to reg operations. (what about NOPs and HALTS???)
-                regs.setReg(retiree.getWriteReg(), retiree.getWriteValue());
-            }
-            
-            //if branch 
-                //if mispredict should advance = false;
-            
 
+            //stores
+            if (retiree.getOpcode() == IssuedInst.INST_TYPE.STORE) {
+                simulator.memory.setIntDataAtAddr(retiree.addr, retiree.getWriteValue());
+
+            } //reg to reg operations. 
+            else if (retiree.getOpcode() != IssuedInst.INST_TYPE.NOP) {
+                regs.setReg(retiree.getWriteReg(), retiree.getWriteValue());
+            } else {
+                //branches?
+            }
+
+            //if branch 
+            //if mispredict should advance = false;
             if (shouldAdvance) { //if not branch mispredict
                 numRetirees++; //prolly tells us total instr executed
                 buff[frontQ] = null;

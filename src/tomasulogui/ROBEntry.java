@@ -100,6 +100,10 @@ public class ROBEntry {
         //update virtual reg if applicable (regDestTag). (for Stores etc that read from destination regs???????)---------------------------------------------------
         opcode = inst.getOpcode();//update instr type
 
+         //
+        if(opcode == IssuedInst.INST_TYPE.NOP || opcode == IssuedInst.INST_TYPE.HALT){
+            complete = true;
+        }
         //no need to initialize complete (aka valid in UI) already initialized to false
         //value already initialized to -1, bc new instructions arent finished (update value when valid/complete = true) 
         
@@ -139,7 +143,12 @@ public class ROBEntry {
             //virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
             addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
             addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing
+        }else if (opcode == IssuedInst.INST_TYPE.LOAD){
+            
         }
+        
+        
+       
           
         
         //IF BRANCH (in case of mispredicted branch
