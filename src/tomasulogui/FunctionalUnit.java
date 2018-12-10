@@ -23,52 +23,46 @@ public abstract class FunctionalUnit {
 
     public abstract int getExecCycles();
 
-    public void countDownCycles() {
-        cycles2Execute--;
-
-    }
-
     public void execCycle(CDB cdb) {
 
 //        //snoop on the CDB first to validate/update data before checking if
 //        //a functional unit can perform its function
-        if (cdb.getDataValid() && stations[0] != null) {
+        if (cdb.getDataValid() && stations[0] != null && !stations[0].data1Valid) {
             stations[0].snoop(cdb);
         }
-        if (cdb.getDataValid() && stations[1] != null) {
+        if (cdb.getDataValid() && stations[1] != null && !stations[1].data2Valid) {
             stations[1].snoop(cdb);
         }
 
-
-        //if reservation station is executing, then count down cycles. else see if instr cycles is ready
-        if (doCountDown) {
-            cycles2Execute--;
-            //be ready to start new count down when ALU is completed
-            //write to cdb
-            if (cycles2Execute <= 0) {
-                //         result = this.calculateResult(reservationStationBeingCalc);
-                iWantToTalk = true;
-//            if (iCanTalk) {
-//                cdb.setDataValue(result);
-//                cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
-//                cdb.setDataValid(true);
-//                doCountDown = false;
-//                stations[reservationStationBeingCalc] = new ReservationStation(simulator);
-//                reservationStationBeingCalc = -1;
-//                iCanTalk = false;
-//                iWantToTalk = false;
+        if (iCanTalk) {//DO THIS HERE RATHER THEN PIPSIM
+            cdb.setDataValue(calculateResult(reservationStationBeingCalc));
+            cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
+            cdb.setDataValid(true);
+            doCountDown = false;
+            stations[reservationStationBeingCalc] = null;
+            reservationStationBeingCalc = -1;
+            iCanTalk = false;
+            iWantToTalk = false;
 //
 //            }
-            }
-        } else if (doCountDown == false && reservationStationBeingCalc == -1) {
+        }
+        if (doCountDown == false && reservationStationBeingCalc == -1) {
             if (stations[1] != null && stations[1].isReady()) {
                 reservationStationBeingCalc = 1;
                 doCountDown = true;
-                cycles2Execute = getExecCycles()-1; //1 for being loaded, and one for this clk cycle
+                cycles2Execute = getExecCycles();
             } else if (stations[0] != null && stations[0].isReady()) {
                 reservationStationBeingCalc = 0;
                 doCountDown = true;
-                cycles2Execute = getExecCycles()-1;
+                cycles2Execute = getExecCycles();
+            }
+        }
+
+        if (doCountDown) {
+            cycles2Execute--;
+            //I want to talk = true if next clock cycle I will be ready to talk
+            if (cycles2Execute == 0) {
+                iWantToTalk = true; //i want to talk next clk cycle
             }
         }
 
