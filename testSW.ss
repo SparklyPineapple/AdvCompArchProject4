@@ -1,8 +1,7 @@
-0:  ADDI R1, R0, 11
-4:  NOP
+0:  ADDI R1, R0, 0
+4:  ADDI R2, R0, 2
 8:  NOP
 12:  NOP
-16:  NOP
+16:  SW R2, 4000(R1)
 20:  NOP
-24:  SW R1, 4000(R0)
-28:  HALT
+24:  HALT

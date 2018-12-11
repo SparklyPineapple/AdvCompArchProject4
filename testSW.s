@@ -1,11 +1,10 @@
 Begin Assembly
-ADDI R1, R0, 11
+ADDI R1, R0, 0
+ADDI R2, R0, 2
 NOP
 NOP
+SW R2, 4000(R1)
 NOP
-NOP
-NOP
-SW R1, 4000(R0)
 HALT
 End Assembly
 -- begin main data
