@@ -94,8 +94,31 @@ public class ReorderBuffer {
         // could be store address source
 
         if (cdb.getDataValid()) {
+            //original Instruction is doing great
             buff[cdb.getDataTag()].setWriteValue(cdb.getDataValue());
             buff[cdb.getDataTag()].complete = true;
+            this.setTagForReg(buff[cdb.getDataTag()].writeReg, -1);
+            
+            //dependent store Instructions
+            for(int i =(cdb.getDataTag()+1)%size; i != rearQ; i=(i+1)%size ){
+                if (buff[i].opcode == IssuedInst.INST_TYPE.STORE && !buff[i].complete ){
+                    if(buff[i].virtRegAddr == cdb.getDataTag() ){
+                        buff[i].addr = buff[i].addrOffset+ cdb.dataValue;
+                        buff[i].virtRegAddr = -1;
+                        if(buff[i].virtRegSrc == -1){
+                            buff[i].complete = true;
+                        }
+                    }
+                    if(buff[i].virtRegSrc == cdb.getDataTag()){
+                        buff[i].setWriteValue(cdb.getDataValue());
+                        buff[i].virtRegSrc = -1;
+                        if(buff[i].virtRegAddr == -1){
+                            buff[i].complete = true;
+                        }
+                    }
+                }
+            }
+            
         }
         
     }

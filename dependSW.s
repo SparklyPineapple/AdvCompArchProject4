@@ -1,8 +1,8 @@
 Begin Assembly
-ADDI R1, R0, 40
+ADDI R1, R0, 0
+NOP
 ADDI R2, R0, 2
-ADD R1, R1, R2
-SW R1, 4052(R0)
+SW R2, 4052(R1)
 HALT
 End Assembly
 -- begin main data

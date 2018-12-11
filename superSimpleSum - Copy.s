@@ -1,8 +1,11 @@
 --add 1 and 2 together and store the result (3) into R3
 --all ADDIs, and ADDs. no branches, jumps, or memory operations
 Begin Assembly
-ADDI R1, R0, 1 
-ADDI R2, R0, 2
+ADDI R1, R1, 1 
+ADDI R2, R2, 2
+NOP
+NOP
+NOP
 ADD R3, R1, R2
 HALT
 End Assembly

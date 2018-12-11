@@ -95,6 +95,7 @@ public class ROBEntry {
         instPC = inst.getPC(); //update PC
         if (inst.regDestUsed == true) {
             writeReg = inst.getRegDest();//update destination Reg 
+            rob.setTagForReg(writeReg, frontQ);
         }
 
         //update virtual reg if applicable (regDestTag). (for Stores etc that read from destination regs???????)---------------------------------------------------
@@ -139,19 +140,27 @@ public class ROBEntry {
         
         //IF STORE
         if (opcode == IssuedInst.INST_TYPE.STORE) { 
-            //virtRegSrc = -1; //virtual register source (number of index in array)
-            //virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
             addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
-            //addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing  /////////ONLY WORKS IF regSrc1 & 2 IS VALID/READY TO GO 
-            
             
             if(inst.regSrc1Valid){
-                addr = addrOffset + inst.getRegSrc1();
+                addr = addrOffset + inst.getRegSrc1Value();
+            }else{
+                virtRegAddr = inst.getRegSrc1Tag();
+            }
+            
+            if(inst.regSrc2Valid){
+                writeReg = inst.regSrc2; //dest reg. aka destination field
+                writeValue = inst.regSrc2Value;//value to store in dest reg?? //value field
+            }else{
+                virtRegSrc = inst.getRegSrc2Tag();
+            }
+            
+            if(inst.regSrc1Valid && inst.regSrc2Valid){
+                complete = true;
             }
             
             
-            writeReg = inst.regSrc2; //dest reg. aka destination field
-            writeValue = inst.regSrc2Value;//value to store in dest reg?? //value field
+            
         }
         
         
