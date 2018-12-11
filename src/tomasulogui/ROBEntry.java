@@ -142,9 +142,16 @@ public class ROBEntry {
             //virtRegSrc = -1; //virtual register source (number of index in array)
             //virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
             addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
-            addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing
-        }else if (opcode == IssuedInst.INST_TYPE.LOAD){
+            //addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing  /////////ONLY WORKS IF regSrc1 & 2 IS VALID/READY TO GO 
             
+            
+            if(inst.regSrc1Valid){
+                addr = addrOffset + inst.getRegSrc1();
+            }
+            
+            
+            writeReg = inst.regSrc2; //dest reg. aka destination field
+            writeValue = inst.regSrc2Value;//value to store in dest reg?? //value field
         }
         
         

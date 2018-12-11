@@ -39,10 +39,8 @@ public class ReorderBuffer {
 
     /**
      * if instruction is a HALT instruction return true
-     *
-     * @return
      */
-    public boolean retireInst() {//---------------------------------------------------------------------
+    public boolean retireInst() {
         // 1. regular reg dest inst
         // 2. isBranch w/ mispredict
         // 3. isStore (store if instruction needs to store)
@@ -57,11 +55,11 @@ public class ReorderBuffer {
             return true;
         }
 
-        boolean shouldAdvance = true; //what is this?
+        boolean shouldAdvance = true;
 
-        // TODO - this is where you look at the type of instruction and
+        // this is where you look at the type of instruction and
         // figure out how to retire it properly
-        //retire one closest to the front of the quese frontQ
+        // retire one closest to the front of the quese frontQ
         // if mispredict branch, won't do normal advance
         if (retiree.complete) {
 
@@ -73,7 +71,7 @@ public class ReorderBuffer {
             else if (retiree.getOpcode() != IssuedInst.INST_TYPE.NOP) {
                 regs.setReg(retiree.getWriteReg(), retiree.getWriteValue());
             } else {
-                //branches?
+                //branches
             }
 
             //if branch 
@@ -99,6 +97,7 @@ public class ReorderBuffer {
             buff[cdb.getDataTag()].setWriteValue(cdb.getDataValue());
             buff[cdb.getDataTag()].complete = true;
         }
+        
     }
 
     public void updateInstForIssue(IssuedInst inst) {
@@ -110,7 +109,7 @@ public class ReorderBuffer {
         // I use the call to copyInstData below to do 2 things:
         // 1. update the Issued Inst
         // 2. fill in the ROB entry
-        // first get a ROB slot
+        // first get a ROB slot 
         if (buff[rearQ] != null) {
             throw new MIPSException("updateInstForIssue: no ROB slot avail");
         }

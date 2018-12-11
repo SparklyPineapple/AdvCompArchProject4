@@ -1,0 +1,5 @@
+0:  ADDI R1, R0, 40
+4:  ADDI R2, R0, 2
+8:  ADD R1, R1, R2
+12:  SW R1, 4052(R0)
+16:  HALT
