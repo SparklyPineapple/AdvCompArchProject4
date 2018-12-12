@@ -6,28 +6,26 @@ public class ROBEntry {
 
     // TODO - add many more fields into entry
     // I deleted most, and only kept those necessary to compile GUI
-    // K+A variables
+    
     // store fields
-    int addr = -1; //addr of where we are storing
-    int virtRegSrc = -1; //virtual register source (number of index in array)
-    int virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
-    int addrOffset = -1; //offset to add to virtRegAddr to get final address to write to
+    int addr = -1;
+    int virtRegSrc = -1;
+    int virtRegAddr = -1;
+    int addrOffset = -1; 
 
     //branch fields (ignore for now. fill out later)
-    //boolean prediction; //taken/nottaken prediction
-    // boolean mispredict; //is the result of the prediction correct
-    int result;//conditional result for branches w/ conditions
-    int target;//address of branch target
-    int nextPC; //PC+4
+    int result;
+    int target;
+    int nextPC;//PC+4
 
-    //fields
+
     //G's variables
-    boolean complete = false; //state field
+    boolean complete = false;
     boolean predictTaken = false;
     boolean mispredicted = false;
     int instPC = -1;
-    int writeReg = -1; //dest reg. aka destination field
-    int writeValue = -1;//value to store in dest reg?? //value field
+    int writeReg = -1;
+    int writeValue = -1;
 
     IssuedInst.INST_TYPE opcode;
 
@@ -59,7 +57,7 @@ public class ROBEntry {
         return (opcode == IssuedInst.INST_TYPE.HALT);
     }
 
-    public void setBranchTaken(boolean result) { ///--------------------------------------------------------
+    public void setBranchTaken(boolean result) {
         // TODO - maybe more than simple set
     }
 
@@ -85,21 +83,19 @@ public class ROBEntry {
         // 1. update the instruction, 
         // 2. update the fields of the ROBEntry,
         
+
+        //UPDATE FIELDS IN ROBEntry///////////////////////////////////////////////////////
         
-        
-        
-        
-        //UPDATE FIELDS IN ROBEntry
-        //update branch mispredicted ---implement when we do branaches
+        //update branch mispredicted
         //update prediction of branch (taken/nottaken) NOTE: intr without brnaches are predicted not taken
-        instPC = inst.getPC(); //update PC
+        
+        instPC = inst.getPC();
         if (inst.regDestUsed == true) {
-            writeReg = inst.getRegDest();//update destination Reg 
+            writeReg = inst.getRegDest();
             rob.setTagForReg(writeReg, frontQ);
         }
 
-        //update virtual reg if applicable (regDestTag). (for Stores etc that read from destination regs???????)---------------------------------------------------
-        opcode = inst.getOpcode();//update instr type
+        opcode = inst.getOpcode();
 
          //Take care of automatic completes
         if(opcode == IssuedInst.INST_TYPE.NOP || opcode == IssuedInst.INST_TYPE.HALT){
@@ -108,12 +104,8 @@ public class ROBEntry {
         
         
         
-        
-        
-        
-        
-        //UPDATE INSTRUCTION
-        inst.setRegDestTag(frontQ); //changes/updates tag OR SLOT#
+        //UPDATE INSTRUCTION/////////////////////////////////////////////////////////////
+        inst.setRegDestTag(frontQ);
         
         //populate src1 data appropriately
         if(inst.regSrc1Used){
@@ -136,7 +128,7 @@ public class ROBEntry {
         }
         
         
-        //IF STORE
+        //if store
         if (opcode == IssuedInst.INST_TYPE.STORE) { 
             addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
             
@@ -148,7 +140,7 @@ public class ROBEntry {
             
             if(inst.regSrc2Valid){
                 writeReg = inst.regSrc2; //dest reg. aka destination field
-                writeValue = inst.regSrc2Value;//value to store in dest reg?? //value field
+                writeValue = inst.regSrc2Value;//value field
             }else{
                 virtRegSrc = inst.getRegSrc2Tag();
             }
@@ -159,11 +151,8 @@ public class ROBEntry {
             
             
             
-        }
-        
-        
-       
-          
+        }       
+               
         
         //IF BRANCH (in case of mispredicted branch
         //target (taken addr)

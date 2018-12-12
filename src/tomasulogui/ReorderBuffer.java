@@ -37,9 +37,6 @@ public class ReorderBuffer {
         return numRetirees;
     }
 
-    /**
-     * if instruction is a HALT instruction return true
-     */
     public boolean retireInst() {
         // 1. regular reg dest inst
         // 2. isBranch w/ mispredict
@@ -59,14 +56,13 @@ public class ReorderBuffer {
 
         // this is where you look at the type of instruction and
         // figure out how to retire it properly
-        // retire one closest to the front of the quese frontQ
+        // retire one closest to the front of the queue
         // if mispredict branch, won't do normal advance
         if (retiree.complete) {
 
             //stores
             if (retiree.getOpcode() == IssuedInst.INST_TYPE.STORE) {
                 simulator.memory.setIntDataAtAddr(retiree.addr, retiree.getWriteValue());
-
             } //reg to reg operations. 
             else if (retiree.getOpcode() != IssuedInst.INST_TYPE.NOP) {
                 regs.setReg(retiree.getWriteReg(), retiree.getWriteValue());
@@ -74,14 +70,12 @@ public class ReorderBuffer {
                 //branches
             }
 
-            //if branch 
-            //if mispredict should advance = false;
-            if (shouldAdvance) { //if not branch mispredict
-                numRetirees++; //prolly tells us total instr executed
+            if (shouldAdvance) {
+                numRetirees++; 
                 buff[frontQ] = null;
                 frontQ = (frontQ + 1) % size;
-            } else { //if branch mispredict
-
+            } else { 
+                //if branch mispredict
             }
         }
 
