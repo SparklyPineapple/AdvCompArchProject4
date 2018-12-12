@@ -20,9 +20,6 @@ public class ReservationStation {
     int address;
     boolean predictedTaken = false;
 
-    //k+a
-    //boolean isEmpty = true;
-
     public ReservationStation(PipelineSimulator sim) {
         simulator = sim;
     }
@@ -47,6 +44,7 @@ public class ReservationStation {
         return function;
     }
 
+    //for updating operands of resident instructions
     public void snoop(CDB cdb) {
         if (cdb.getDataValid()) {
             if (cdb.getDataTag() == tag1) {
@@ -57,7 +55,6 @@ public class ReservationStation {
                 data2 = cdb.dataValue;
                 data2Valid = true;
             }
-
         }
     }
 
@@ -71,7 +68,8 @@ public class ReservationStation {
         int newData2Tag;
         boolean newData2Valid;
 
-        //Depending on instruction type, data2 will be assign differently (either operand2, or immediate)
+        //Depending on instruction type, 
+        //data2 will be assign differently (either operand2, or immediate)
         if (inst.regSrc2Used) {
             newData2 = inst.regSrc2Value;
             newData2Tag = inst.regSrc2Tag;
@@ -81,20 +79,18 @@ public class ReservationStation {
             newData2Tag = -1;
             newData2Valid = true;
         }
-    
-            tag1 = inst.regSrc1Tag;
-            data1 = inst.regSrc1Value;
-            data1Valid = inst.regSrc1Valid;
-            tag2 = newData2Tag;
-            data2 = newData2;
-            data2Valid = newData2Valid;
-            destTag = inst.regDestTag;
-            function = inst.opcode;
-            //isEmpty = false;
-            
-            
-            //inititalze stuff for branches here
-             //FOR BRANCHES
+
+        tag1 = inst.regSrc1Tag;
+        data1 = inst.regSrc1Value;
+        data1Valid = inst.regSrc1Valid;
+        tag2 = newData2Tag;
+        data2 = newData2;
+        data2Valid = newData2Valid;
+        destTag = inst.regDestTag;
+        function = inst.opcode;
+
+        //inititalze stuff for branches here
+        //FOR BRANCHES
 //            stations[1].addressTag = inst.branchTgt?????
 //            if (stations[1].addressTag != -1){
 //                stations[1].addressValid = true;
@@ -104,6 +100,5 @@ public class ReservationStation {
 //            stations[1].address = ?????
 //            stations[1].predictedTaken = inst.branchPrediction;
 // 
-
     }
 }

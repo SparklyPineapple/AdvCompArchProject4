@@ -27,8 +27,6 @@ public class IssueUnit {
         // We then send this to the ROB, which fills in the data fields
         // We then check the CDB, and see if it is broadcasting data we need,
         //    so that we can forward during issue
-        
-        
         boolean isStall = false;
         Instruction memInstr = simulator.getMemory().getInstAtAddr(simulator.getPC());
 
@@ -38,18 +36,16 @@ public class IssueUnit {
         //all instructions that need ALUs. if ROB or reservation stations are full stall
         if (!simulator.reorder.isFull()) {
 
-            //this is where we should check the btb -----------------------------------------------------------------
+            //this is where we would check the btb -----------------------------------------------------------------
             //loads
             if (memInstr.getOpcode() == Instruction.INST_LW) {
-                
-                if(simulator.loader.isReservationStationAvail()){
+                if (simulator.loader.isReservationStationAvail()) {
                     simulator.reorder.updateInstForIssue(issuee);
                     simulator.loader.acceptIssue(issuee);
-                }else{
+                } else {
                     isStall = true;
                 }
-                               
-                
+
             } //stores
             else if (memInstr.getOpcode() == Instruction.INST_SW) {
                 simulator.reorder.updateInstForIssue(issuee);
@@ -58,34 +54,27 @@ public class IssueUnit {
                 simulator.reorder.updateInstForIssue(issuee);
             } //NOPS
             else if (memInstr.getOpcode() == Instruction.INST_NOP) {
-                //store in ROB. stored as "valid" ??. when ROB is ready to retire it just gets discarded and life moves on?????? 
                 simulator.reorder.updateInstForIssue(issuee);
             } //intALU
-            else if (!simulator.alu.areReservationStationsFull() && memInstr.getOpcode() != Instruction.INST_DIV && memInstr.getOpcode() != Instruction.INST_MUL) {
+            else if (!simulator.alu.areReservationStationsFull() 
+                    && memInstr.getOpcode() != Instruction.INST_DIV 
+                    && memInstr.getOpcode() != Instruction.INST_MUL) {
 
                 simulator.reorder.updateInstForIssue(issuee);
-
-                //check CDB for operands if current operands not valid
-                //send to FU
                 simulator.alu.acceptIssue(issuee);
 
             } //intDIV
-            else if (!simulator.divider.areReservationStationsFull() && memInstr.getOpcode() == Instruction.INST_DIV) {
+            else if (!simulator.divider.areReservationStationsFull() 
+                    && memInstr.getOpcode() == Instruction.INST_DIV) {
 
                 simulator.reorder.updateInstForIssue(issuee);
-                //check CDB for operands if current operands not valid (for forwarding)
-
-                //send to FU
                 simulator.divider.acceptIssue(issuee);
 
             } //intMULT
-            else if (!simulator.multiplier.areReservationStationsFull() && memInstr.getOpcode() == Instruction.INST_MUL) {
+            else if (!simulator.multiplier.areReservationStationsFull() 
+                    && memInstr.getOpcode() == Instruction.INST_MUL) {
 
-                // We then send this to the FU, who stores in reservation station
                 simulator.reorder.updateInstForIssue(issuee);
-                //check CDB for operands if current operands not valid (for forwarding)
-
-                //send to FU
                 simulator.multiplier.acceptIssue(issuee);
 
             } else {
@@ -105,27 +94,5 @@ public class IssueUnit {
         //updatePC -----PC gets updated in ROBEntry
         simulator.pc.incrPC();
         //IF NECESSARY RESET PC FOR BRANCHING HERE
-
     }
-
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-//not certian if we need this somewhere for stores or not
-/*
-
-
-    // store fields
-    int addr = -1; //addr of where we are storing
-    int virtRegSrc = -1; //virtual register source (number of index in array)
-    int virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
-    int addrOffset = -1; //offset to add to virtRegAddr to get final address to write to
-
-        if (opcode == IssuedInst.INST_TYPE.STORE) { 
-
-            //virtRegSrc = -1; //virtual register source (number of index in array)
-            //virtRegAddr = -1; //virtual register holding adress to be written to (number of index in array)
-            addrOffset = inst.getImmediate(); //offset to add to virtRegAddr to get final address to write to
-            addr = addrOffset + inst.getRegSrc1(); //addr of where we are storing; //addr of where we are storing
-        }
- */

@@ -101,12 +101,10 @@ public class ROBEntry {
         //update virtual reg if applicable (regDestTag). (for Stores etc that read from destination regs???????)---------------------------------------------------
         opcode = inst.getOpcode();//update instr type
 
-         //
+         //Take care of automatic completes
         if(opcode == IssuedInst.INST_TYPE.NOP || opcode == IssuedInst.INST_TYPE.HALT){
             complete = true;
         }
-        //no need to initialize complete (aka valid in UI) already initialized to false
-        //value already initialized to -1, bc new instructions arent finished (update value when valid/complete = true) 
         
         
         

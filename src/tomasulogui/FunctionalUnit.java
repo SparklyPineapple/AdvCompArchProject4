@@ -25,7 +25,7 @@ public abstract class FunctionalUnit {
 
     public void execCycle(CDB cdb) {
         
-        // check reservationStations for cdb data
+        // snoop on the CDB in case it has something we need
         if (cdb.getDataValid() && stations[0] != null && (!(stations[0].data1Valid) || !(stations[0].data2Valid))) {
             stations[0].snoop(cdb);
         }
@@ -33,7 +33,8 @@ public abstract class FunctionalUnit {
             stations[1].snoop(cdb);
         }
         
-        if (iCanTalk) {//DO THIS HERE RATHER THEN PIPSIM
+        //Broadcast if the pipeline Simulator has permissed this FU
+        if (iCanTalk) {
             int result = calculateResult(reservationStationBeingCalc);
             cdb.setDataValue(result);
             cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
@@ -43,9 +44,9 @@ public abstract class FunctionalUnit {
             reservationStationBeingCalc = -1;
             iCanTalk = false;
             iWantToTalk = false;
-//
-//            }
         }
+        
+        //if the ALU is available, start the next calculation
         if (doCountDown == false && reservationStationBeingCalc == -1) {
             if (stations[1] != null && stations[1].isReady()) {
                 reservationStationBeingCalc = 1;
@@ -58,26 +59,17 @@ public abstract class FunctionalUnit {
             }
         }
 
+        //if the ALU is in the middle of a calculation, complete the next Cycle
         if (doCountDown) {
             cycles2Execute--;
-            //I want to talk = true if next clock cycle I will be ready to talk
+            //Ask to broadcast if Calculation is finished
             if (cycles2Execute == 0) {
-                iWantToTalk = true; //i want to talk next clk cycle
+                iWantToTalk = true; 
             }
         }
-        
-        
-        
-        //ailin's pitiful attempt to get things to work
-//        if (cycles2Execute == 0) {
-//                iWantToTalk = true; //i want to talk next clk cycle
-//            }
-        
-
     }
 
     public void acceptIssue(IssuedInst inst) {
-
         //accepts issues into reservation stations 
         //reservation stations are already verified to be open before it hits this point (in IssueUnit) 
         //fill in index 1 (lower index close it ALU if empty)
@@ -88,41 +80,13 @@ public abstract class FunctionalUnit {
         } else {
             stations[0] = tempStation;
         }
-
     }
 
     //for every call to execCycle() an iterator should go down by 1 but when do we start the count down and how do we communicate when we are finished?
     public boolean areReservationStationsFull() {
         if (stations[0] != null && stations[1] != null) {
+            return true;
         }
         return false;
     }
-
 }
-
-//old stuff in execCycle
-////        switch (inst.letter) {
-////            case I:
-////                if(inst.regDestUsed){
-////                    newData2 = inst.immediate;
-////                    newData2Tag = -1;
-////                    newData2valid = true;
-////                }
-////                break;
-////            case J:
-////                System.out.println("j-type detected in functional unit");
-////                break;
-////            case R:
-////                newData2 = inst.regSrc2;
-////                newData2Tag = inst.regSrc2Tag;
-////                newData2valid = inst.regSrc2Valid;
-////                break;
-////            default:
-////                break;
-////        }
-//old stuff in accept issue
-////        //move stuff in first spot down if second spot is open so we can always know that the top stuff is most recent.
-////        //aka FU check 2nd spot first and if nothing there grab from 1st spot
-////        if (stations[0] != null && stations[1] == null) {
-////            stations[1] = stations[0];
-////        }

@@ -365,33 +365,11 @@ public class PipelineSimulator {
         // notify them they can write
         cdb.setDataValid(true);
 
-        // hint: start with divider, and give it first chance of getting CDB
         if (divider.iWantToTalk) {
-//            cdb.setDataValue(divider.calculateResult(divider.reservationStationBeingCalc));
-//            cdb.setDataTag(divider.stations[divider.reservationStationBeingCalc].destTag);
-//            cdb.setDataValid(true);
-//            divider.doCountDown = false;
-//            divider.stations[divider.reservationStationBeingCalc] = null;
-//            divider.reservationStationBeingCalc = -1;
-//            divider.iWantToTalk = false;
             divider.iCanTalk = true;
         } else if (multiplier.iWantToTalk) {
-//            cdb.setDataValue(multiplier.calculateResult(multiplier.reservationStationBeingCalc));
-//            cdb.setDataTag(multiplier.stations[multiplier.reservationStationBeingCalc].destTag);
-//            cdb.setDataValid(true);
-//            multiplier.doCountDown = false;
-//            multiplier.stations[multiplier.reservationStationBeingCalc] = null;
-//            multiplier.reservationStationBeingCalc = -1;
-//            multiplier.iWantToTalk = false;
             multiplier.iCanTalk = true;
         } else if (alu.iWantToTalk) {
-//            cdb.setDataValue(alu.calculateResult(alu.reservationStationBeingCalc));
-//            cdb.setDataTag(alu.stations[alu.reservationStationBeingCalc].destTag);
-//            cdb.setDataValid(true);
-//            alu.doCountDown = false;
-//            alu.stations[alu.reservationStationBeingCalc] = null;
-//            alu.reservationStationBeingCalc = -1;
-//            alu.iWantToTalk = false;
             alu.iCanTalk = true;
         } else if (loader.requestWriteback) {
           cdb.setDataTag(loader.writeTag);
