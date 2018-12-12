@@ -34,7 +34,7 @@ public class IntAlu extends FunctionalUnit {
                 return stations[station].data1 >> stations[station].data2;
             case SRA:
                 return stations[station].data1 >>> stations[station].data2;
-            //STICK JUMPS & BRANCH STUFF HERE (if we do that stuff here)
+            //branch and jump instructions (for comparing etc)
 //            case ADD:
 //                int a = 1;
 //                break;
