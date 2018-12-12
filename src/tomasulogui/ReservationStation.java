@@ -73,7 +73,7 @@ public class ReservationStation {
 
         //Depending on instruction type, data2 will be assign differently (either operand2, or immediate)
         if (inst.regSrc2Used) {
-            newData2 = inst.regSrc2;
+            newData2 = inst.regSrc2Value;
             newData2Tag = inst.regSrc2Tag;
             newData2Valid = inst.regSrc2Valid;
         } else {

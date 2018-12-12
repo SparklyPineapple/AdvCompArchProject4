@@ -27,18 +27,30 @@ public abstract class FunctionalUnit {
 
 //        //snoop on the CDB first to validate/update data before checking if
 //        //a functional unit can perform its function
-        if (cdb.getDataValid() && stations[0] != null && !(stations[0].data1Valid || stations[0].data2Valid)) {
+        if (cdb.getDataValid() && stations[0] != null && (!(stations[0].data1Valid) || !(stations[0].data2Valid))) {
             stations[0].snoop(cdb);
         }
-        if (cdb.getDataValid() && stations[1] != null && !(stations[1].data1Valid || stations[1].data2Valid)) {
+        if (cdb.getDataValid() && stations[1] != null && (!(stations[1].data1Valid) || !(stations[1].data2Valid))) {
             stations[1].snoop(cdb);
         }
 
         if (iCanTalk) {//DO THIS HERE RATHER THEN PIPSIM
-            cdb.setDataValue(calculateResult(reservationStationBeingCalc));
+            int result = calculateResult(reservationStationBeingCalc);
+            cdb.setDataValue(result);
             cdb.setDataTag(stations[reservationStationBeingCalc].destTag);
             cdb.setDataValid(true);
             doCountDown = false;
+            
+            if((reservationStationBeingCalc == 0) && !stations[1].isReady()){
+                if(stations[1].tag1 == stations[reservationStationBeingCalc].destTag){
+                    stations[1].data1 = result;
+                    
+                }
+                
+                if(stations[1].tag2 == stations[reservationStationBeingCalc].destTag){
+                    stations[1].data2 = result;
+                }
+            }
             stations[reservationStationBeingCalc] = null;
             reservationStationBeingCalc = -1;
             iCanTalk = false;
@@ -65,6 +77,12 @@ public abstract class FunctionalUnit {
                 iWantToTalk = true; //i want to talk next clk cycle
             }
         }
+        
+        //ailin's pitiful attempt to get things to work
+//        if (cycles2Execute == 0) {
+//                iWantToTalk = true; //i want to talk next clk cycle
+//            }
+        
 
     }
 

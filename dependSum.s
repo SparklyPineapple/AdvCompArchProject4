@@ -3,6 +3,7 @@
 Begin Assembly
 ADDI R1, R0, 1 
 ADDI R2, R0, 2
+NOP
 ADD R3, R1, R2
 HALT
 End Assembly
